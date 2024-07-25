@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foody/Screen/proflie.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
@@ -62,36 +63,52 @@ class _HomeState extends State<Home> {
       ),
       drawer: Drawer(  
         child: ListView(  
-          // Important: Remove any padding from the ListView.  
           padding: EdgeInsets.zero,  
-          children: <Widget>[  
-            UserAccountsDrawerHeader(  
-              accountName: Text("Abhishek Mishra"),  
-              accountEmail: Text("abhishekm977@gmail.com"),  
+          children: <Widget> [  
+            const UserAccountsDrawerHeader(  
+              accountName: Text("Meet Gajera"),  
+              accountEmail: Text("meetgajera413@gmail.com"),  
               currentAccountPicture: CircleAvatar(  
                 backgroundColor: Colors.orange,  
                 child: Text(  
-                  "A",  
+                  "M",  
                   style: TextStyle(fontSize: 40.0),  
                 ),   
               ),  
             ),  
             ListTile(  
-              leading: Icon(Icons.home), title: Text("Home"),  
+              leading: const Icon(Icons.home), 
+              title: const Text("Home"),  
               onTap: () {  
                 Navigator.pop(context);  
               },  
             ),  
             ListTile(  
-              leading: Icon(Icons.settings), title: Text("Settings"),  
+              leading: const Icon(Icons.fastfood_outlined), 
+              title: const Text("Menu"),  
               onTap: () {  
                 Navigator.pop(context);  
               },  
-            ),  
+            ),
             ListTile(  
-              leading: Icon(Icons.contacts), title: Text("Contact Us"),  
+              leading: const Icon(Icons.card_giftcard), 
+              title: const Text("Card"),  
               onTap: () {  
                 Navigator.pop(context);  
+              },  
+            ),
+            ListTile(  
+              leading: const Icon(Icons.heart_broken), 
+              title: const Text("Wishlist"),  
+              onTap: () {  
+                Navigator.pop(context);  
+              },  
+            ),
+            ListTile(  
+              leading: const Icon(Icons.person), 
+              title: const Text("Proflie"),  
+              onTap: () {  
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> const Proflie()));
               },  
             ),  
           ],  

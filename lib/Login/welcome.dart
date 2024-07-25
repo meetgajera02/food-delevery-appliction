@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foody/Login/sign_in.dart';
+import 'package:foody/Login/sign_up.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Welcome extends StatefulWidget {
@@ -24,7 +26,7 @@ class _WelcomeState extends State<Welcome> {
                 textStyle: const TextStyle(fontSize: 24),
                 backgroundColor: const Color.fromRGBO(255, 204, 0, 1)
               ),
-              onPressed: (){}, 
+              onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=> const SignIn()));}, 
               child:  Text("Sign In", style:GoogleFonts.lato(color: Colors.black))
             ),
             const SizedBox(height:20),
@@ -34,7 +36,7 @@ class _WelcomeState extends State<Welcome> {
                 textStyle: const TextStyle(fontSize: 24),
                 backgroundColor: const Color.fromRGBO(255, 204, 0, 1)
               ),
-              onPressed: (){},
+              onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=> const SignUp()));},
               child: Text("Sign Up", style:GoogleFonts.lato(color: Colors.black))
             )
           ]
