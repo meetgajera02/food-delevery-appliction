@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foody/Screen/menu.dart';
 import 'package:foody/Screen/proflie.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -57,6 +59,126 @@ class _HomeState extends State<Home> {
               const SizedBox(height: 20),
               Image.asset('assets/images/Rectangle.png'),
               const SizedBox(height:20),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    CupertinoButton(
+                      onPressed: (){},
+                      child: Container(
+                        width: 65,
+                        height:100,
+                        decoration: BoxDecoration(
+                          borderRadius:  BorderRadius.circular(10),
+                          border: Border.all(color: Colors.black)
+                        ),
+                        child:Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset("assets/images/burger.png"),
+                              Text("Burger",style:GoogleFonts.josefinSans(fontSize:18,color: Colors.black))
+                            ],
+                          ),
+                        )
+                      ),
+                    ), 
+                    CupertinoButton(
+                      onPressed: () {},
+                      child: Container(
+                        width: 65,
+                        height:100,
+                        decoration: BoxDecoration(
+                          borderRadius:  BorderRadius.circular(10),
+                          border: Border.all(color: Colors.black)
+                        ),
+                        child:Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset("assets/images/pizza.png"),
+                              Text("Pizza",style:GoogleFonts.josefinSans(fontSize:18,color: Colors.black))
+                            ],
+                          ),
+                        )
+                      ),
+                    ), 
+                    CupertinoButton(
+                      onPressed: () {  },
+                      child: Container(
+                        width: 65,
+                        height:100,
+                        decoration: BoxDecoration(
+                          borderRadius:  BorderRadius.circular(10),
+                          border: Border.all(color: Colors.black)
+                        ),
+                        child:Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset("assets/images/dessert.png"),
+                              Text("Dessert",style:GoogleFonts.josefinSans(fontSize:18,color: Colors.black))
+                            ],
+                          ),
+                        )
+                      ),
+                    ), 
+                    CupertinoButton(
+                      onPressed: () {  },
+                      child: Container(
+                        width: 65,
+                        height:100,
+                        decoration: BoxDecoration(
+                          borderRadius:  BorderRadius.circular(10),
+                          border: Border.all(color: Colors.black)
+                        ),
+                        child:Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset("assets/images/drink.png"),
+                              Text("Drink",style:GoogleFonts.josefinSans(fontSize:18,color: Colors.black))
+                            ],
+                          ),
+                        )
+                      ),
+                    ), 
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Text("Our Menu",style:GoogleFonts.josefinSans(fontSize:22)),
+                  const Spacer(),
+                  TextButton(
+                    onPressed: (){},
+                    child: const Text("See all",style:TextStyle(fontSize:21,color:Colors.orange))
+                  )
+                ],
+              ),
+              const SizedBox(height: 20),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Column(
+                      children: [
+                        Image.asset("assets/images/Rectangle7.png"),
+                        Text("Daylight Coffee",style:GoogleFonts.lato(fontSize:22)),
+                      ],
+                    ),
+                    const SizedBox(width:20),
+                    Column(
+                      children: [
+                        Image.asset("assets/images/Rectangle8.png"),
+                        Text("Dark Brownie",style:GoogleFonts.lato(fontSize:22)),
+                      ],
+                    ),
+                  ],
+                ),
+                
+              ),
             ],
           ),
         ),
@@ -87,7 +209,7 @@ class _HomeState extends State<Home> {
               leading: const Icon(Icons.fastfood_outlined), 
               title: const Text("Menu"),  
               onTap: () {  
-                Navigator.pop(context);  
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> const Menu()));  
               },  
             ),
             ListTile(  

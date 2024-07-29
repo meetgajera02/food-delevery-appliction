@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:foody/Login/forget_password.dart';
 import 'package:foody/Login/sign_up.dart';
+import 'package:foody/Screen/home.dart';
+import 'package:foody/constants/constants.dart';
+import 'package:foody/firebase_services/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SignIn extends StatefulWidget {
@@ -79,7 +82,15 @@ class _SignInState extends State<SignIn> {
                       textStyle: const TextStyle(fontSize: 24),
                       backgroundColor: const Color.fromRGBO(255, 204, 0, 1)
                     ),
-                    onPressed: () {},
+                    onPressed: () async{
+                      bool isVaildated = loginVaildation(email.text, password.text);
+                      if (isVaildated) {
+                        bool isLogined = await FirebaseAuthHelper.instance
+                          .login(email.text, password.text, context);
+                        // ignore: use_build_context_synchronously
+                        if (isLogined) {Navigator.push(context, MaterialPageRoute(builder: (context)=> const Home()));}
+                      }
+                    },
                     child: Text("Sign In",style:GoogleFonts.poppins(color: Colors.black))
                   ),
                   const SizedBox(height: 20),

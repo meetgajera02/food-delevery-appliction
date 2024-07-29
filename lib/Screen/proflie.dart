@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:foody/Login/sign_in.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 
 class Proflie extends StatefulWidget {
   const Proflie({super.key});
@@ -11,8 +14,10 @@ class Proflie extends StatefulWidget {
 }
 
 class _ProflieState extends State<Proflie> {
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -54,11 +59,11 @@ class _ProflieState extends State<Proflie> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Meet Gajera",style:GoogleFonts.jaldi(fontSize:26)),
-                      Text("+91 9537230057",style:GoogleFonts.jaldi(fontSize:22,color:const Color.fromARGB(125, 87, 87, 85))),
+                      Text("Meet",style:GoogleFonts.poppins(fontSize:22)),
+                      Text("+91 9537230057",style:GoogleFonts.poppins(fontSize:18,color:const Color.fromARGB(125, 87, 87, 85))),
                       TextButton(
                         onPressed: () {},
-                        child:Text("View Profile",style:GoogleFonts.jaldi(fontSize:22,color:const Color.fromARGB(255, 178, 125, 0))), 
+                        child:Text("View Profile",style:GoogleFonts.poppins(fontSize:18,color:const Color.fromARGB(255, 178, 125, 0))), 
                       ),
                     ],
                   )
@@ -78,8 +83,8 @@ class _ProflieState extends State<Proflie> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Store Delivery Info",style:GoogleFonts.lato(fontSize:20,color:const Color.fromARGB(255, 178, 125, 0))),
-                      Text("Approx Delivery Time is: 30 mins",style:GoogleFonts.jaldi(fontSize:20,color:const Color.fromARGB(125, 87, 87, 85))),
+                      Text("Store Delivery Info",style:GoogleFonts.poppins(fontSize:16,color:const Color.fromARGB(255, 178, 125, 0))),
+                      Text("Approx Delivery Time is: 30 mins",style:GoogleFonts.poppins(fontSize:12,color:const Color.fromARGB(125, 87, 87, 85))),
                     ],
                   )
                 ],
@@ -106,7 +111,11 @@ class _ProflieState extends State<Proflie> {
                   Prifilemenu(
                     title: 'Logout',
                     icon: Icons.logout,
-                    onPressed: () {},
+                    onPressed: () {
+                      FirebaseAuth.instance.signOut().then((value) {
+                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const SignIn()));
+                      });
+                    },
                     TextColor:  const Color.fromARGB(255, 178, 125, 0),
                     endIcon: false
                   ),   
@@ -152,7 +161,7 @@ class Prifilemenu extends StatelessWidget {
         ),
         child: Icon(icon),
       ),
-      title: Text(title,style:GoogleFonts.lato(fontSize:20,color: Colors.black).apply(color: TextColor)),
+      title: Text(title,style:GoogleFonts.poppins(fontSize:18,color: Colors.black).apply(color: TextColor)),
       trailing: endIcon? Container(
         width: 30,
         height: 30,
