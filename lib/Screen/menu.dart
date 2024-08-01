@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:foody/Model/product_model.dart';
-import 'package:foody/firebase_services/firebase_firestore.dart';
+import 'package:foody/Screen/product_List.dart';
+import 'package:foody/Screen/home.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Menu extends StatefulWidget {
@@ -12,24 +12,9 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  List<ProductModel> productModelList = [];
-  bool isLoading = false;
-  @override
-  void initState() {
-    getCategoryList();
-    super.initState();
-  }
 
-  void getCategoryList() async {
-    setState(() {
-      isLoading = true;
-    });
-    productModelList = await FirebaseFirestoreHelper.instance.menu();
-    //productModelList.shuffle();
-    setState(() {
-      isLoading = false;
-    });
-  }
+  final List<String> categories = ['Pizza', 'Burgers','Dosa','Chinese', 'Drinks', 'Desserts'];
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +22,7 @@ class _MenuState extends State<Menu> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          onPressed: ()=> Navigator.pop(context, false), 
+          onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=> const Home()));}  , 
           icon: const Icon(Icons.arrow_back_ios,)
         ),
         title:  Text("Our Menu",style:GoogleFonts.poppins(fontSize:22,color:const Color.fromARGB(255, 178, 125, 0))),
@@ -55,24 +40,30 @@ class _MenuState extends State<Menu> {
             Container(
               height: 70,
             ),
-            productModelList.isEmpty ? const Center(
+            categories.isEmpty ? const Center(
               child: Text("Best Product is empty"),
             ):GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
               scrollDirection:  Axis.vertical,
               shrinkWrap: true,
-              itemCount: productModelList.length,
+              itemCount: categories.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-              itemBuilder: (ctx,index) {
-                ProductModel singleProduct = productModelList[index];
+              itemBuilder: (context, index) {
                 return SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: CupertinoButton(
-                    onPressed: (){},
+                    onPressed: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductList(category: categories[index]),
+                        ),
+                      );
+                    },
                     child: SizedBox(
                       child: Column(
                         children: [
-                          Image.network(singleProduct.image,width: 50,height: 50),
-                          Text (singleProduct.name,style:GoogleFonts.lato(fontSize:22,color: Colors.black))
+                          Text (categories[index],style:GoogleFonts.lato(fontSize:22,color: Colors.black))
                         ]
                       ),
                     )

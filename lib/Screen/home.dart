@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:foody/Screen/menu.dart';
 import 'package:foody/Screen/proflie.dart';
@@ -12,6 +15,35 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  User? currentUser;
+  DocumentSnapshot<Map<String, dynamic>>? userData;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        setState(() {
+          currentUser = user;
+        });
+
+        DocumentSnapshot<Map<String, dynamic>> snapshot =
+            await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        setState(() {
+          userData = snapshot;
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error fetching user data: $e");
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,10 +219,10 @@ class _HomeState extends State<Home> {
         child: ListView(  
           padding: EdgeInsets.zero,  
           children: <Widget> [  
-            const UserAccountsDrawerHeader(  
-              accountName: Text("Meet Gajera"),  
-              accountEmail: Text("meetgajera413@gmail.com"),  
-              currentAccountPicture: CircleAvatar(  
+            UserAccountsDrawerHeader(  
+              accountName: Text("${userData?['name'] ?? 'N/A'}",style:GoogleFonts.poppins(fontSize:20)),
+              accountEmail: Text("${userData?['email'] ?? 'N/A'}"),  
+              currentAccountPicture: const CircleAvatar(  
                 backgroundColor: Colors.orange,  
                 child: Text(  
                   "M",  
@@ -214,17 +246,13 @@ class _HomeState extends State<Home> {
             ),
             ListTile(  
               leading: const Icon(Icons.card_giftcard), 
-              title: const Text("Card"),  
-              onTap: () {  
-                Navigator.pop(context);  
-              },  
+              title: const Text("Cart"),  
+              onTap: () {},  
             ),
             ListTile(  
               leading: const Icon(Icons.heart_broken), 
               title: const Text("Wishlist"),  
-              onTap: () {  
-                Navigator.pop(context);  
-              },  
+              onTap: () {},  
             ),
             ListTile(  
               leading: const Icon(Icons.person), 

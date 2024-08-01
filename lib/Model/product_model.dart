@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 ProductModel productModelFromJson(String str) =>
     ProductModel.fromJson(json.decode(str));
 
@@ -62,4 +64,6 @@ class ProductModel {
         price: price,
         status:status,
       );
+
+  static fromSnapshot(QueryDocumentSnapshot<Object?> doc) {}
 }

@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foody/Model/user_model.dart';
 import 'package:foody/constants/constants.dart';
 import 'package:foody/firebase_services/firebase_storage.dart';
-import 'firebase_services/firebase_firestore.dart';
 
 
 class AppProvider with ChangeNotifier {
@@ -13,12 +13,9 @@ class AppProvider with ChangeNotifier {
   UserModel? _userModel;
 
   UserModel get getUserInformation => _userModel!;
-
-  ////// USer Information
-  void getUserInfoFirebase() async {
-    _userModel = await FirebaseFirestoreHelper.instance.getUserInformation();
-    notifyListeners();
-  }
+  
+  User? currentUser;
+  DocumentSnapshot<Map<String, dynamic>>? userData;
 
   void updateUserInfoFirebase(
       BuildContext context, UserModel userModel, File? file) async {

@@ -1,13 +1,12 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:foody/Model/user_model.dart';
-import 'package:foody/constants/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
-import '../app_provider.dart';
 
 
 // ignore: camel_case_types
@@ -20,6 +19,75 @@ class update extends StatefulWidget {
 
 // ignore: camel_case_types
 class _updateState extends State<update> {
+  final TextEditingController name = TextEditingController();
+  final TextEditingController phone = TextEditingController();
+  final TextEditingController email = TextEditingController();
+  User? currentUser;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        setState(() {
+          currentUser = user;
+          email.text = user.email ?? '';
+        });
+
+        DocumentSnapshot<Map<String, dynamic>> snapshot =
+            await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+
+        if (snapshot.exists) {
+          setState(() {
+            name.text = snapshot.data()?['name'] ?? '';
+            phone.text = snapshot.data()?['phone'] ?? '';
+            email.text = snapshot.data()?['email'] ?? '';
+          });
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error fetching user data: $e");
+      }
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> updateProfile() async {
+    try {
+      if (currentUser != null) {
+        // Update Firestore with new user data
+        await FirebaseFirestore.instance.collection('users').doc(currentUser!.uid).update({
+          'name': name.text,
+          'phone': phone.text,
+          'email': email.text,
+        });
+
+        if (email.text != currentUser!.email) {
+          // ignore: deprecated_member_use
+          await currentUser!.updateEmail(email.text);
+        }
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile updated successfully')),
+        );
+      }
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error updating profile: $e')),
+      );
+    }
+  }
   File? image;
   void takePicture() async {
     XFile? value = await ImagePicker()
@@ -30,15 +98,14 @@ class _updateState extends State<update> {
       });
     }
   }
-  TextEditingController name = TextEditingController();
-  TextEditingController phone = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    AppProvider appProvider = Provider.of<AppProvider>(
-      context,
-    );
+
     return Scaffold(
-      body: SingleChildScrollView(
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -85,47 +152,43 @@ class _updateState extends State<update> {
                   ),
                 ]
               ),
+
               const SizedBox(height: 40),
+
               TextFormField(
                 controller: name,
-                    decoration: InputDecoration(
-                      hintText: appProvider.getUserInformation.name,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5)
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: phone,
-                    decoration: InputDecoration(
-                      hintText: appProvider.getUserInformation.phone,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5)
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      hintText: appProvider.getUserInformation.email,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5)
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(280, 60),
-                      textStyle: const TextStyle(fontSize: 24),
-                      backgroundColor: const Color.fromRGBO(255, 204, 0, 1)
-                    ),
-                    onPressed: () async {
-                  UserModel userModel = appProvider.getUserInformation.copyWith(name: name.text,phone: phone.text);
-                  appProvider.updateUserInfoFirebase(context, userModel, image);
-                  showMessage("Successfully update name");
-                },
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5)
+                  )
+                ),
+              ),
+              const SizedBox(height: 20),
+                  
+              TextFormField(
+                controller: phone,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5)
+                  )
+                ),
+              ),
+               const SizedBox(height: 20),
+              TextFormField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5)
+                  )
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(280, 60),
+                  textStyle: const TextStyle(fontSize: 24),
+                  backgroundColor: const Color.fromRGBO(255, 204, 0, 1)
+                ),
+                onPressed: updateProfile,
                 child: const Text("Save",style: TextStyle(color: Colors.black))
               ),
             ]

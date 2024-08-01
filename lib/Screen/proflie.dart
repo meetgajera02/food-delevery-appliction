@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:foody/Login/sign_in.dart';
+import 'package:foody/Screen/product_entry.dart';
+import 'package:foody/Screen/update.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,7 +18,35 @@ class Proflie extends StatefulWidget {
 }
 
 class _ProflieState extends State<Proflie> {
+  User? currentUser;
+  DocumentSnapshot<Map<String, dynamic>>? userData;
 
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        setState(() {
+          currentUser = user;
+        });
+
+        DocumentSnapshot<Map<String, dynamic>> snapshot =
+            await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        setState(() {
+          userData = snapshot;
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error fetching user data: $e");
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -59,10 +91,10 @@ class _ProflieState extends State<Proflie> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Meet",style:GoogleFonts.poppins(fontSize:22)),
-                      Text("+91 9537230057",style:GoogleFonts.poppins(fontSize:18,color:const Color.fromARGB(125, 87, 87, 85))),
+                      Text("${userData?['name'] ?? 'N/A'}",style:GoogleFonts.poppins(fontSize:22)),
+                      Text("+91 ${userData?['phone'] ?? 'N/A'}",style:GoogleFonts.poppins(fontSize:18,color:const Color.fromARGB(125, 87, 87, 85))),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=> const update()));  },
                         child:Text("View Profile",style:GoogleFonts.poppins(fontSize:18,color:const Color.fromARGB(255, 178, 125, 0))), 
                       ),
                     ],
@@ -100,7 +132,9 @@ class _ProflieState extends State<Proflie> {
                   Prifilemenu(
                     title: 'Your Order',
                     icon: Icons.shopping_cart,
-                    onPressed: (){}
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> DataEntryPage()));  
+                    }
                   ),
                   Prifilemenu(
                     title: 'Change Password',
