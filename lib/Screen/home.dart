@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:foody/Screen/Wishlist.dart';
+import 'package:foody/Screen/card.dart';
 import 'package:foody/Screen/menu.dart';
 import 'package:foody/Screen/proflie.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -136,7 +138,7 @@ class _HomeState extends State<Home> {
                       ),
                     ), 
                     CupertinoButton(
-                      onPressed: () {  },
+                      onPressed: () {},
                       child: Container(
                         width: 65,
                         height:100,
@@ -156,7 +158,7 @@ class _HomeState extends State<Home> {
                       ),
                     ), 
                     CupertinoButton(
-                      onPressed: () {  },
+                      onPressed: () {},
                       child: Container(
                         width: 65,
                         height:100,
@@ -208,8 +210,7 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ],
-                ),
-                
+                ),              
               ),
             ],
           ),
@@ -232,31 +233,35 @@ class _HomeState extends State<Home> {
             ),  
             ListTile(  
               leading: const Icon(Icons.home), 
-              title: const Text("Home"),  
+              title: Text("Home",style: GoogleFonts.poppins()),  
               onTap: () {  
                 Navigator.pop(context);  
               },  
             ),  
             ListTile(  
               leading: const Icon(Icons.fastfood_outlined), 
-              title: const Text("Menu"),  
+              title: Text("Menu",style: GoogleFonts.poppins()),  
               onTap: () {  
                 Navigator.push(context, MaterialPageRoute(builder: (context)=> const Menu()));  
               },  
             ),
             ListTile(  
               leading: const Icon(Icons.card_giftcard), 
-              title: const Text("Cart"),  
-              onTap: () {},  
+              title: Text("Cart",style: GoogleFonts.poppins()),  
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> const Cart()));  
+              },  
             ),
             ListTile(  
               leading: const Icon(Icons.heart_broken), 
-              title: const Text("Wishlist"),  
-              onTap: () {},  
+              title: Text("Wishlist",style: GoogleFonts.poppins()),  
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> const Wishlist()));
+              },  
             ),
             ListTile(  
               leading: const Icon(Icons.person), 
-              title: const Text("Proflie"),  
+              title: Text("Proflie",style: GoogleFonts.poppins()),  
               onTap: () {  
                 Navigator.push(context, MaterialPageRoute(builder: (context)=> const Proflie()));
               },  

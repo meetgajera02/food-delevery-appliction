@@ -72,17 +72,6 @@ class _ProflieState extends State<Proflie> {
               ),
               child: Row(
                 children: [
-                  // appProvider.getUserInformation.image == null
-                  //   ? const Icon(
-                  //       Icons.person_outline,
-                  //       size: 120,
-                  //     )
-                  //   : CircleAvatar(
-                  //       backgroundImage:
-                  //           NetworkImage(appProvider.getUserInformation.image!),
-                  //       radius: 60,
-                  //     ),.
-                  
                   ClipRRect(
                     borderRadius: BorderRadius.circular(100),
                     child: Image.asset('assets/images/meet.JPG',width: 96,height: 96)

@@ -40,8 +40,8 @@ class _MenuState extends State<Menu> {
             Container(
               height: 70,
             ),
-            categories.isEmpty ? const Center(
-              child: Text("Best Product is empty"),
+            categories.isEmpty ? Center(
+              child: Text("Best Product is empty",style:GoogleFonts.poppins()),
             ):GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
               scrollDirection:  Axis.vertical,

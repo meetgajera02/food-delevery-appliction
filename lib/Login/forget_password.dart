@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foody/Login/sign_in.dart';
 import 'package:foody/Login/sign_up.dart';
+import 'package:foody/constants/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Forget extends StatefulWidget {
@@ -13,6 +15,7 @@ class Forget extends StatefulWidget {
 class _ForgetState extends State<Forget> {
 
   TextEditingController email = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +58,14 @@ class _ForgetState extends State<Forget> {
                       backgroundColor: const Color.fromRGBO(255, 204, 0, 1),
                       textStyle: const TextStyle(fontSize: 24)
                     ),
-                    onPressed: (){},
+                    onPressed: (){
+                      
+                      _auth.sendPasswordResetEmail(email: email.text.toString()).then((value){
+                        showMessage("email are send");
+                      }).onError((error, stackTrace) {
+                        showMessage(error.toString());
+                      });
+                    },
                     child: Text("Send",style: GoogleFonts.poppins(color: Colors.black))
                   ),
                   const SizedBox(height: 20),

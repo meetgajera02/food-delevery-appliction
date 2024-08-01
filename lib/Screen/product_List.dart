@@ -53,7 +53,7 @@ class ProductList extends StatelessWidget {
                       Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProductDetailPage(product: products[index]),
+                        builder: (context) => ProductDetail(product: products[index]),
                       ),
                     );
                     },
@@ -101,7 +101,7 @@ class ProductList extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   Image.asset("assets/images/Group.png"),
-                                  const Text("Add to cart",style: TextStyle(color: Colors.black),),
+                                  Text("Add to cart",style:GoogleFonts.poppins(color: Colors.black),),
                                   Image.asset("assets/images/Group1.png")
                                 ],
                               ),

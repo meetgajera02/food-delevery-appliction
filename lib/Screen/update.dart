@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +25,8 @@ class _updateState extends State<update> {
   final TextEditingController email = TextEditingController();
   User? currentUser;
   bool isLoading = true;
+  File? image;
+  String? imageUrl;
 
   @override
   void initState() {
@@ -48,6 +51,7 @@ class _updateState extends State<update> {
             name.text = snapshot.data()?['name'] ?? '';
             phone.text = snapshot.data()?['phone'] ?? '';
             email.text = snapshot.data()?['email'] ?? '';
+            imageUrl = snapshot.data()?['imageUrl'] ?? '';
           });
         }
       }
@@ -70,6 +74,7 @@ class _updateState extends State<update> {
           'name': name.text,
           'phone': phone.text,
           'email': email.text,
+          'imageUrl': imageUrl,
         });
 
         if (email.text != currentUser!.email) {
@@ -88,14 +93,46 @@ class _updateState extends State<update> {
       );
     }
   }
-  File? image;
-  void takePicture() async {
-    XFile? value = await ImagePicker()
-        .pickImage(source: ImageSource.gallery, imageQuality: 40);
-    if (value != null) {
-      setState(() {
-        image = File(value.path);
-      });
+
+  Future<void> takePicture() async {
+    try {
+      XFile? pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 40,
+      );
+      if (pickedFile != null) {
+        setState(() {
+          image = File(pickedFile.path);
+        });
+
+        // Upload the image to Firebase Storage
+        String fileName = '${currentUser!.uid}_profile.jpg';
+        TaskSnapshot uploadTask = await FirebaseStorage.instance
+            .ref()
+            .child('profile_images')
+            .child(fileName)
+            .putFile(image!);
+        
+        String downloadUrl = await uploadTask.ref.getDownloadURL();
+        
+        // Update the imageUrl in the state and Firestore
+        setState(() {
+          imageUrl = downloadUrl;
+        });
+
+        await FirebaseFirestore.instance.collection('users').doc(currentUser!.uid).update({
+          'imageUrl': downloadUrl,
+        });
+
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile picture updated successfully')),
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error picking or uploading image: $e");
+      }
     }
   }
 
@@ -133,7 +170,9 @@ class _updateState extends State<update> {
                         height: 120,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
-                          child: Image.asset('assets/images/meet.JPG')
+                          child: imageUrl != null && imageUrl!.isNotEmpty
+                              ? Image.network(imageUrl!)
+                              : Image.asset('assets/images/meet.JPG'),
                         ),
                       ),
                       Positioned(
@@ -144,7 +183,7 @@ class _updateState extends State<update> {
                           height: 40,
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),color: Colors.yellow),
                           child:  IconButton(
-                            onPressed: (){},
+                            onPressed: takePicture,
                             icon: const Icon(Icons.add_a_photo,size: 20),color: Colors.black87)
                         ),
                       )

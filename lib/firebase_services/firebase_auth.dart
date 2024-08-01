@@ -18,7 +18,7 @@ class FirebaseAuthHelper {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
       UserModel userModel = UserModel(
-          id: userCredential.user!.uid, name: name, email: email, image: null, phone: phone);
+          id: userCredential.user!.uid, name: name, email: email, phone: phone, imageUrl: '');
 
       _firestore.collection("users").doc(userModel.id).set(userModel.toJson());
       // ignore: use_build_context_synchronously

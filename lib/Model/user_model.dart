@@ -5,15 +5,16 @@ UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 String userModelToJson(UserModel data) => json.encode(data.toJson());
 
 class UserModel {
+
   UserModel({
-    this.image,
+    required this.imageUrl,
     required this.id,
     required this.name,
     required this.email,
     required this.phone,
   });
 
-  String? image;
+  String imageUrl;
   String name;
   String phone;
   String email;
@@ -21,7 +22,7 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         id: json["id"],
-        image: json["image"],
+        imageUrl: json["imageUrl"],
         email: json["email"],
         name: json["name"],
         phone: json["phone"],
@@ -29,20 +30,20 @@ class UserModel {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "image": image,
+        "imageUrl": imageUrl,
         "name": name,
         "email": email,
         "phone": phone,
       };
 
   UserModel copyWith({
-    String? name,image,phone,
+    String? name,imageUrl,phone,
   }) =>
       UserModel(
         id: id,
         phone: phone?? this.phone,
         name: name ?? this.name,
         email: email,
-        image: image ?? this.image,
+        imageUrl: imageUrl ?? this.imageUrl,
       );
 }
