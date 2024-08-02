@@ -10,8 +10,11 @@ class AppProvider with ChangeNotifier {
   final List<ProductModel> _cartProductList = [];
   final List<ProductModel> _buyProductList = [];
 
-  void addCartProduct(ProductModel productModel) {
-    _cartProductList.add(productModel);
+  List<ProductModel> get getCartProductList => _cartProductList;
+  List<ProductModel> get getFavouriteProductList => _favouriteProductList;
+
+  void addCartProduct(ProductModel product) {
+    _cartProductList.add(product);
     notifyListeners();
   }
 
@@ -20,7 +23,13 @@ class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<ProductModel> get getCartProductList => _cartProductList;
+  void updateQty(ProductModel product, int qty) {
+    int index = _cartProductList.indexWhere((p) => p.id == product.id);
+    if (index != -1) {
+      _cartProductList[index] = product.copyWith(qty: qty);
+      notifyListeners();
+    }
+  }
 
   ///// Favourite ///////
   final List<ProductModel> _favouriteProductList = [];
@@ -34,8 +43,6 @@ class AppProvider with ChangeNotifier {
     _favouriteProductList.remove(productModel);
     notifyListeners();
   }
-
-  List<ProductModel> get getFavouriteProductList => _favouriteProductList;
 
   //////// TOTAL PRICE / // / // / / // / / / // /
 
@@ -53,12 +60,6 @@ class AppProvider with ChangeNotifier {
       totalPrice += element.price * element.qty;
     }
     return totalPrice;
-  }
-
-  void updateQty(ProductModel productModel, int qty) {
-    int index = _cartProductList.indexOf(productModel);
-    _cartProductList[index].qty = qty;
-    notifyListeners();
   }
   ///////// BUY Product  / / // / / // / / / // /
 

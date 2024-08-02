@@ -4,6 +4,8 @@ import 'package:foody/app_provider.dart';
 import 'package:foody/constants/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProductDetail extends StatefulWidget {
   final ProductModel product;
@@ -14,6 +16,42 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
+  User? currentUser = FirebaseAuth.instance.currentUser;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  Future<void> _addToCart(ProductModel product) async {
+    if (currentUser != null) {
+      await firestore
+          .collection('users')
+          .doc(currentUser!.uid)
+          .collection('cart')
+          .doc(product.id)
+          .set(product.toJson());
+    }
+  }
+
+  Future<void> _addToWishlist(ProductModel product) async {
+    if (currentUser != null) {
+      await firestore
+          .collection('users')
+          .doc(currentUser!.uid)
+          .collection('wishlist')
+          .doc(product.id)
+          .set(product.toJson());
+    }
+  }
+
+  Future<void> _removeFromWishlist(ProductModel product) async {
+    if (currentUser != null) {
+      await firestore
+          .collection('users')
+          .doc(currentUser!.uid)
+          .collection('wishlist')
+          .doc(product.id)
+          .delete();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     AppProvider appProvider = Provider.of<AppProvider>(
@@ -23,26 +61,29 @@ class _ProductDetailState extends State<ProductDetail> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          onPressed: (){Navigator.pop(context);}  , 
-          icon: const Icon(Icons.arrow_back_ios,)
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back_ios,),
         ),
-        title:  Text(widget.product.name,style:GoogleFonts.poppins(fontSize:22,color:const Color.fromARGB(255, 178, 125, 0))),
+        title: Text(widget.product.name, style: GoogleFonts.poppins(fontSize: 22, color: const Color.fromARGB(255, 178, 125, 0))),
         actions: [
           IconButton(
-            onPressed: (){
+            onPressed: () async {
               setState(() {
-                widget.product.isFavourite =
-                  !widget.product.isFavourite;
+                widget.product.isFavourite = !widget.product.isFavourite;
               });
               if (widget.product.isFavourite) {
                 appProvider.addFavouriteProduct(widget.product);
+                await _addToWishlist(widget.product);
                 showMessage("Added to Favourite");
               } else {
                 appProvider.removeFavouriteProduct(widget.product);
-                showMessage("Remove to Favourite");
+                await _removeFromWishlist(widget.product);
+                showMessage("Removed from Favourite");
               }
-            }, 
-            icon: Icon(widget.product.isFavourite? Icons.favorite : Icons.favorite_border,color: const Color.fromARGB(255, 255, 200, 58)),
+            },
+            icon: Icon(widget.product.isFavourite ? Icons.favorite : Icons.favorite_border, color: const Color.fromARGB(255, 255, 200, 58)),
           )
         ],
       ),
@@ -63,39 +104,39 @@ class _ProductDetailState extends State<ProductDetail> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Text(widget.product.name,style:GoogleFonts.lato(fontSize:26)),
+                  Text(widget.product.name, style: GoogleFonts.lato(fontSize: 26)),
                   const SizedBox(height: 20),
-                  Text("Rs. ${widget.product.price}",style:GoogleFonts.josefinSans(fontSize:22,color:const Color.fromARGB(255, 178, 125, 0))),
+                  Text("Rs. ${widget.product.price}", style: GoogleFonts.josefinSans(fontSize: 22, color: const Color.fromARGB(255, 178, 125, 0))),
                   const SizedBox(height: 20),
                   Row(
                     children: [
-                      Text("About",style:GoogleFonts.lato(fontSize:22)),
+                      Text("About", style: GoogleFonts.lato(fontSize: 22)),
                     ],
                   ),
                   const SizedBox(height: 20),
-                  Text(widget.product.description, style:GoogleFonts.poppins(fontSize:16),textAlign: TextAlign.justify),
+                  Text(widget.product.description, style: GoogleFonts.poppins(fontSize: 16), textAlign: TextAlign.justify),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(00, 45),
                       backgroundColor: const Color.fromRGBO(255, 200, 58, 1),
                     ),
-                    onPressed: (){
-                      AppProvider appProvider = Provider.of<AppProvider>(context,listen: false);
+                    onPressed: () async {
                       appProvider.addCartProduct(widget.product);
-                      showMessage("Added to Card");
-                    }, 
+                      await _addToCart(widget.product);
+                      showMessage("Added to Cart");
+                    },
                     child: SizedBox(
                       width: 200,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Image.asset("assets/images/Group.png"),
-                          Text("Add to cart",style:GoogleFonts.poppins(color: Colors.black),),
+                          Text("Add to cart", style: GoogleFonts.poppins(color: Colors.black)),
                           Image.asset("assets/images/Group1.png")
                         ],
                       ),
-                    )
+                    ),
                   ),
                 ],
               ),
