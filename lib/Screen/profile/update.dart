@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:foody/constants/image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -140,6 +141,14 @@ class _updateState extends State<update> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          onPressed: ()=> Navigator.pop(context, false), 
+          icon: const Icon(Icons.arrow_back_ios,)
+        ),
+        title:  Text("Update",style:GoogleFonts.poppins(fontSize:22,color:const Color.fromARGB(255, 178, 125, 0))),
+      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -147,19 +156,7 @@ class _updateState extends State<update> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children:[
-              Container(
-                height: 70,
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: ()=> Navigator.pop(context, false), 
-                    icon: const Icon(Icons.arrow_back_ios,)
-                  ),
-                  Text("Update",style:GoogleFonts.josefinSans(fontSize:22,color:const Color.fromARGB(255, 178, 125, 0))),
-                ],
-              ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 50),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -172,7 +169,7 @@ class _updateState extends State<update> {
                           borderRadius: BorderRadius.circular(100),
                           child: imageUrl != null && imageUrl!.isNotEmpty
                               ? Image.network(imageUrl!)
-                              : Image.asset('assets/images/meet.JPG'),
+                              : Image.asset(user),
                         ),
                       ),
                       Positioned(

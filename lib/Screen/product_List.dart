@@ -76,8 +76,8 @@ class ProductList extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Image.asset("assets/images/veg-icon.png",width: 15,height: 15),
-                                  Text(products[index].name,style:GoogleFonts.lato(fontSize:22,color: Colors.black)),
-                                  Text(products[index].status,style:GoogleFonts.lato(fontSize:14,color:const Color.fromRGBO(126, 126, 126, 1))),
+                                  Text(products[index].name,style:GoogleFonts.poppins(fontSize:20,color: Colors.black)),
+                                  Text(products[index].status,style:GoogleFonts.poppins(fontSize:14,color:const Color.fromRGBO(126, 126, 126, 1))),
                                   Text("₹ ${products[index].price}",style:GoogleFonts.lato(fontSize:20,color: Colors.black)),
                                 ],
                               ),

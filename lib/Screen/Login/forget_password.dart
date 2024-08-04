@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:foody/Login/sign_in.dart';
-import 'package:foody/Login/sign_up.dart';
+import 'package:foody/Screen/Login/sign_in.dart';
+import 'package:foody/Screen/Login/sign_up.dart';
 import 'package:foody/constants/constants.dart';
+import 'package:foody/constants/image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Forget extends StatefulWidget {
@@ -23,7 +24,7 @@ class _ForgetState extends State<Forget> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.asset("assets/images/Forget.jpg"),
+            Image.asset(forget),
             Center(
             child: Container(
               padding: const EdgeInsets.all(20),

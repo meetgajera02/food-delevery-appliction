@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:foody/Login/sign_in.dart';
-import 'package:foody/Login/sign_up.dart';
+import 'package:foody/Screen/Login/sign_in.dart';
+import 'package:foody/Screen/Login/sign_up.dart';
+import 'package:foody/constants/image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Welcome extends StatefulWidget {
@@ -17,8 +18,8 @@ class _WelcomeState extends State<Welcome> {
       body:SingleChildScrollView(
         child:Column(
           children: [
-            Image.asset("assets/images/welcome.jpg"),
-            Image.asset("assets/images/logo.png",width:250),
+            Image.asset(welcome),
+            Image.asset(logo,width:250),
             const SizedBox(height: 40),
             ElevatedButton(
               style: ElevatedButton.styleFrom(

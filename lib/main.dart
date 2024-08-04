@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foody/Login/welcome.dart';
+import 'package:foody/Screen/Login/welcome.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:foody/Screen/home.dart';
 import 'package:foody/app_provider.dart';

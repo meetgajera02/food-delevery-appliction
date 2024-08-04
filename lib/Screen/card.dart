@@ -1,9 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foody/Model/product_model.dart';
 import 'package:foody/Screen/single_card.dart';
+import 'package:foody/Screen/Address/view_address.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart'; // Make sure to import the address page
+import '../app_provider.dart'; // Import your AppProvider
 
 class Cart extends StatefulWidget {
   const Cart({super.key});
@@ -33,6 +37,9 @@ class _CartState extends State<Cart> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the appProvider instance using Provider.of
+    AppProvider appProvider = Provider.of<AppProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -70,6 +77,46 @@ class _CartState extends State<Cart> {
             },
           );
         },
+      ),
+      bottomNavigationBar: SizedBox(
+        height: 150,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Total",
+                    style: GoogleFonts.poppins(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "₹ ${appProvider.totalPrice()}",
+                    style: GoogleFonts.lato(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20.0),
+              CupertinoButton(
+                color: const Color.fromRGBO(255, 204, 0, 1),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const ViewAddress()));
+                },
+                child: Text(
+                  "Confirm",
+                  style: GoogleFonts.poppins(color: Colors.black),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

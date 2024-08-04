@@ -2,9 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:foody/Login/sign_in.dart';
+import 'package:foody/Screen/Advertisement.dart';
+import 'package:foody/Screen/Login/sign_in.dart';
+import 'package:foody/Screen/profile/change_password.dart';
 import 'package:foody/Screen/product_entry.dart';
-import 'package:foody/Screen/update.dart';
+import 'package:foody/Screen/profile/update.dart';
+import 'package:foody/constants/image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -74,7 +77,7 @@ class _ProflieState extends State<Proflie> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(100),
-                    child: Image.asset('assets/images/meet.JPG',width: 96,height: 96)
+                    child: Image.asset(user,width: 96,height: 96)
                   ),
                   const SizedBox(width: 10),
                   Column(
@@ -117,7 +120,13 @@ class _ProflieState extends State<Proflie> {
               child: Column(
                 children: [
                   Prifilemenu(title: 'Share this app',icon: Icons.share,onPressed: (){Share.share('com.example.foody');}),
-                  Prifilemenu(title: 'Rate Us',icon: Icons.star_border,onPressed: (){}),
+                  Prifilemenu(
+                    title: 'Rate Us',
+                    icon: Icons.star_border,
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> AdvertisementCarousel())); 
+                    }
+                  ),
                   Prifilemenu(
                     title: 'Your Order',
                     icon: Icons.shopping_cart,
@@ -128,7 +137,9 @@ class _ProflieState extends State<Proflie> {
                   Prifilemenu(
                     title: 'Change Password',
                     icon: Icons.change_circle_outlined,
-                    onPressed: (){}
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> const ChangePassword()));
+                    }
                   ),
                   const Divider(),
                   Prifilemenu(

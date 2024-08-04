@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:foody/Login/sign_in.dart';
+import 'package:foody/Screen/Login/sign_in.dart';
 import 'package:foody/Screen/home.dart';
 import 'package:foody/constants/constants.dart';
+import 'package:foody/constants/image.dart';
 import 'package:foody/firebase_services/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -26,7 +27,7 @@ class _SignUpState extends State<SignUp> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.asset("assets/images/SignUp.jpg"),
+            Image.asset(signup),
             Center(
               child: Container(
               padding: const EdgeInsets.all(20),

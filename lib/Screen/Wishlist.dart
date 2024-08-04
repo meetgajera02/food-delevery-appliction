@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foody/Model/product_model.dart';
-import 'package:foody/Screen/product_detail.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Wishlist extends StatefulWidget {
@@ -67,31 +65,54 @@ class _WishlistState extends State<Wishlist> {
             itemCount: wishlist.length,
             itemBuilder: (ctx, index) {
               ProductModel product = wishlist[index];
-              return ListTile(
-                contentPadding: const EdgeInsets.all(8.0),
-                leading: Image.network(product.image, width: 50, height: 50),
-                title: Text(product.name, style: GoogleFonts.poppins(fontSize: 18)),
-                subtitle: Text("₹ ${product.price}", style: GoogleFonts.poppins(fontSize: 16)),
-                trailing: IconButton(
-                  icon: const Icon(Icons.remove_circle, color: Colors.red),
-                  onPressed: () async {
-                    await firestore
-                        .collection('users')
-                        .doc(currentUser!.uid)
-                        .collection('wishlist')
-                        .doc(product.id)
-                        .delete();
-                    setState(() {});
-                  },
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProductDetail(product: product),
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 262,
+                          height:100,
+                          margin: const EdgeInsets.symmetric(horizontal: 3,vertical: 20),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            boxShadow: const [BoxShadow(
+                              color: Color.fromARGB(255, 243, 243, 243),
+                            )]
+                          ),
+                          child: Row(
+                            children: [
+                              const Padding(padding: EdgeInsets.symmetric(horizontal: 10)),
+                              Image.network(product.image,width: 66,height: 66),
+                              const SizedBox(width: 20),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 20),
+                                  Text(product.name,style:GoogleFonts.josefinSans(fontSize:22)),
+                                  Text("₹  ${product.price}",style:GoogleFonts.lato(fontSize:18)),
+                                ]
+                              )
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () async {
+                            await firestore
+                              .collection('users')
+                              .doc(currentUser!.uid)
+                              .collection('wishlist')
+                              .doc(product.id)
+                              .delete();
+                            setState(() {});
+                          },
+                          icon: Icon(product.isFavourite? Icons.favorite_border : Icons.favorite,color: const Color.fromARGB(255, 255, 200, 58)),
+                        )
+                      ]
                     ),
-                  );
-                },
+                  ],
+                ),
               );
             },
           );

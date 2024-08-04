@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:foody/Login/forget_password.dart';
-import 'package:foody/Login/sign_up.dart';
+import 'package:foody/Screen/Login/forget_password.dart';
+import 'package:foody/Screen/Login/sign_up.dart';
 import 'package:foody/Screen/home.dart';
 import 'package:foody/constants/constants.dart';
+import 'package:foody/constants/image.dart';
 import 'package:foody/firebase_services/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -25,7 +26,7 @@ class _SignInState extends State<SignIn> {
       body: SingleChildScrollView(
         child: Column(
           children:[
-            Image.asset("assets/images/SignIn.jpg"),
+            Image.asset(signin),
            Center(
             child: Container(
               padding: const EdgeInsets.all(20),

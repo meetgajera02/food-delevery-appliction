@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:foody/Screen/Wishlist.dart';
 import 'package:foody/Screen/card.dart';
 import 'package:foody/Screen/menu.dart';
-import 'package:foody/Screen/proflie.dart';
+import 'package:foody/Screen/profile/proflie.dart';
+import 'package:foody/constants/image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
@@ -17,13 +20,48 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  // ignore: unused_field
+  String _searchText = '';
+
   User? currentUser;
   DocumentSnapshot<Map<String, dynamic>>? userData;
+
+  final PageController _pageController = PageController(initialPage: 0);
+  int _currentPage = 0;
+  late Timer _timer;
+
+  final List<Widget> _pages = [
+    AdPage(image: 'assets/images/Rectangle.png'),
+    AdPage(image: fastfood),
+    AdPage(image: drink),
+  ];
 
   @override
   void initState() {
     super.initState();
     fetchUserData();
+    super.initState();
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+      if (_currentPage < _pages.length - 1) {
+        _currentPage++;
+      } else {
+        _currentPage = 0;
+      }
+
+      _pageController.animateToPage(
+        _currentPage,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _pageController.dispose();
+    super.dispose();
   }
 
   Future<void> fetchUserData() async {
@@ -51,7 +89,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
               Container(
@@ -59,7 +97,7 @@ class _HomeState extends State<Home> {
               ),
               Row(
                 children: [
-                  Image.asset("assets/images/logo.png",width: 48,height: 48),
+                  Image.asset(logo,width: 48,height: 48),
                   const SizedBox( width: 10),
                   Text("Foody World",
                     style:GoogleFonts.luckiestGuy(fontSize: 20)
@@ -70,7 +108,7 @@ class _HomeState extends State<Home> {
                       return IconButton(
                         icon: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
-                          child: Image.asset('assets/images/meet.JPG',width: 48,height: 48)
+                          child: Image.asset(user,width: 48,height: 48)
                         ),
                         onPressed: () {
                           Scaffold.of(context).openDrawer();
@@ -82,7 +120,14 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 20),
               TextFormField(
+                onChanged: (value) {
+                  setState(() {
+                    _searchText = value.toLowerCase();
+                  });
+                },
+                style: GoogleFonts.poppins(),
                 decoration:  InputDecoration(
+                  labelStyle: GoogleFonts.poppins(),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10)
                   ),
@@ -91,7 +136,16 @@ class _HomeState extends State<Home> {
                 )
               ),
               const SizedBox(height: 20),
-              Image.asset('assets/images/Rectangle.png'),
+              Container(
+                height: MediaQuery.of(context).size.height / 4,
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: _pages.length,
+                  itemBuilder: (context, index) {
+                    return _pages[index];
+                  },
+                ),
+              ),
               const SizedBox(height:20),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -100,7 +154,7 @@ class _HomeState extends State<Home> {
                     CupertinoButton(
                       onPressed: (){},
                       child: Container(
-                        width: 65,
+                        width: 80,
                         height:100,
                         decoration: BoxDecoration(
                           borderRadius:  BorderRadius.circular(10),
@@ -110,8 +164,8 @@ class _HomeState extends State<Home> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset("assets/images/burger.png"),
-                              Text("Burger",style:GoogleFonts.josefinSans(fontSize:18,color: Colors.black))
+                              Image.asset(burgericon),
+                              Text("Burger",style:GoogleFonts.josefinSans(fontSize:16,color: Colors.black))
                             ],
                           ),
                         )
@@ -120,7 +174,7 @@ class _HomeState extends State<Home> {
                     CupertinoButton(
                       onPressed: () {},
                       child: Container(
-                        width: 65,
+                        width: 80,
                         height:100,
                         decoration: BoxDecoration(
                           borderRadius:  BorderRadius.circular(10),
@@ -130,8 +184,8 @@ class _HomeState extends State<Home> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset("assets/images/pizza.png"),
-                              Text("Pizza",style:GoogleFonts.josefinSans(fontSize:18,color: Colors.black))
+                              Image.asset(pizzaicon),
+                              Text("Pizza",style:GoogleFonts.josefinSans(fontSize:16,color: Colors.black))
                             ],
                           ),
                         )
@@ -140,7 +194,7 @@ class _HomeState extends State<Home> {
                     CupertinoButton(
                       onPressed: () {},
                       child: Container(
-                        width: 65,
+                        width: 80,
                         height:100,
                         decoration: BoxDecoration(
                           borderRadius:  BorderRadius.circular(10),
@@ -150,8 +204,8 @@ class _HomeState extends State<Home> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset("assets/images/dessert.png"),
-                              Text("Dessert",style:GoogleFonts.josefinSans(fontSize:18,color: Colors.black))
+                              Image.asset(desserticon),
+                              Text("Dessert",style:GoogleFonts.josefinSans(fontSize:16,color: Colors.black))
                             ],
                           ),
                         )
@@ -160,7 +214,7 @@ class _HomeState extends State<Home> {
                     CupertinoButton(
                       onPressed: () {},
                       child: Container(
-                        width: 65,
+                        width: 80,
                         height:100,
                         decoration: BoxDecoration(
                           borderRadius:  BorderRadius.circular(10),
@@ -170,8 +224,8 @@ class _HomeState extends State<Home> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset("assets/images/drink.png"),
-                              Text("Drink",style:GoogleFonts.josefinSans(fontSize:18,color: Colors.black))
+                              Image.asset(drinkicon),
+                              Text("Drink",style:GoogleFonts.josefinSans(fontSize:16,color: Colors.black))
                             ],
                           ),
                         )
@@ -186,8 +240,10 @@ class _HomeState extends State<Home> {
                   Text("Our Menu",style:GoogleFonts.josefinSans(fontSize:22)),
                   const Spacer(),
                   TextButton(
-                    onPressed: (){},
-                    child: const Text("See all",style:TextStyle(fontSize:21,color:Colors.orange))
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> const Menu()));
+                    },
+                    child: Text("See all",style:GoogleFonts.poppins(fontSize:18,color:Colors.orange))
                   )
                 ],
               ),
@@ -253,7 +309,7 @@ class _HomeState extends State<Home> {
               },  
             ),
             ListTile(  
-              leading: const Icon(Icons.heart_broken), 
+              leading: const Icon(Icons.favorite), 
               title: Text("Wishlist",style: GoogleFonts.poppins()),  
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context)=> const Wishlist()));
@@ -269,6 +325,24 @@ class _HomeState extends State<Home> {
           ],  
         ),  
       ),  
+    );
+  }
+}
+
+class AdPage extends StatelessWidget {
+  final String image;
+
+  AdPage({required this.image});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(image),
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 }

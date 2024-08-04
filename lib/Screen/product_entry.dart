@@ -21,7 +21,7 @@ class _DataEntryPageState extends State<DataEntryPage> {
   XFile? _image;
   final ImagePicker _picker = ImagePicker();
 
-  final List<String> _categories = ['Pizza', 'Burgers','Dosa','chinese', 'Drinks', 'Desserts'];
+  final List<String> _categories = ['Pizza', 'Fastfood','Gujarati','Panjabi','Chinese','South', 'Drinks','Juise', 'Desserts'];
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
